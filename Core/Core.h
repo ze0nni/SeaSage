@@ -10,22 +10,25 @@
 #include <GL/gl.h>
 #include <SDL/SDL.h>
 
+#include "ICore.h"
+
 #ifndef CORE_H
 #define	CORE_H
 
-class Core {
+class Core : public  ICore {
 public:
     Core();    
     virtual ~Core();
     void log(const char* format, ...);
-    void errlog(const char* format, ...);    
+    void errlog(const char* format, ...);
     void init();
     void run();
+    virtual void setActiveDisplay(IDisplay *nextDisplay);
 private:
     bool doGameLoop;
     void gameLoop();
     void doAction(double t);
-    void doRender(double t);
+    void doRender(double t);    
 };
 
 #endif	/* CORE_H */

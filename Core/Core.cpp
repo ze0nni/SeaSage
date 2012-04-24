@@ -18,15 +18,25 @@ Core::~Core() {
 void Core::init(){
     log("Core::init");
     //todo: SDL_INIT_EVENTTHREAD
-    if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0) {
-        errlog("SDL_Init error: %s", SDL_GetError());
+    int sdlInitArgs = SDL_INIT_TIMER | SDL_INIT_VIDEO;
+    log("SDL_Init(%d)", sdlInitArgs);
+    if (SDL_Init(sdlInitArgs) < 0) {
+        errlog("SDL_Init() error: %s", SDL_GetError());
         exit(1);
-    }
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
-    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    }    
+    //GL SET
+    int sdlGlDoubleBuffer = 1;
+    int sdlGlRedSize = 5;
+    int sdlGlGreenSize = 6;
+    int sdlGlBlueSize = 5;
+    int sdlGlDepthSize = 24;
+    
+    log("gl_DoubleBuffer\t%d\t%d\ngl_RedSize\t%d\t%d\ngl_GreenSize\t%d\t%d\ngl_BlueSize\t%d\t%d\ngl_DepthSize\t%d\t%d",
+        sdlGlDoubleBuffer, SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, sdlGlDoubleBuffer),
+        sdlGlRedSize, SDL_GL_SetAttribute(SDL_GL_RED_SIZE, sdlGlRedSize),
+        sdlGlGreenSize, SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, sdlGlGreenSize),
+        sdlGlBlueSize, SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, sdlGlBlueSize),
+        sdlGlBlueSize, SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, sdlGlDepthSize));
 }
 
 void Core::run() {
@@ -35,11 +45,17 @@ void Core::run() {
     int vmHeight = 480;
     int vmDepth = 32;
     int vmFlags = SDL_OPENGL;
+    log("SDL_SetVideoMode(%d, %d, %d, %d)",vmWidth, vmHeight, vmDepth, vmFlags);
+    
     if (SDL_SetVideoMode(vmWidth, vmHeight, vmDepth, vmFlags) == NULL) {
-        errlog("SDL_SetVideoMode(%d, %d, %d, %d) error: %s",vmWidth, vmHeight, vmDepth, vmFlags, SDL_GetError());
+        errlog("SDL_SetVideoMode() error: %s", SDL_GetError());
         exit(1);
     }
     gameLoop();
+}
+
+void Core::setActiveDisplay(IDisplay* nextDisplay) {
+    
 }
 
 void Core::gameLoop() {
