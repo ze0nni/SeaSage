@@ -10,6 +10,17 @@ GameMap::~GameMap()
     //dtor
 }
 
-bool GameMap::resize(unsigned int newWidth, unsigned int newHeight) {
+bool GameMap::resize(uint newWidth, uint newHeight) {
+    return false;
+}
 
+uint GameMap::getWidth() {
+    return width;
+}
+
+uint GameMap::getHeight() {
+    return height;
+}
+
+ICell GameMap::getCell(uint cx, uint cy) {
 }
