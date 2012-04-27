@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   ICore.h
  * Author: onni
  *
@@ -17,13 +17,33 @@ public:
     virtual void setActiveDisplay(IDisplay *nextDisplay) = 0;
 };
 
-class IDisplay {
+class ICoreObject {
 public:
+    ICoreObject(ICore *__core) {
+        core = __core;
+    }
+
+    virtual ~ICoreObject() {}
+
+    ICore* getCore() {
+        return core;
+    }
+private:
+    ICore *core;
+};
+
+class IDisplay: public ICoreObject {
+public:
+    IDisplay(ICore *__core): ICoreObject(__core) {
+
+    }
+
+    virtual ~IDisplay() {}
     virtual void doAction(double t) = 0;
     virtual void doRender(double t) = 0;
     //virtual void keyDown(int key) = 0;
     //virtual void keyUp(int key) = 0;
-    //virtual void keyPress(int key) = 0;    
+    //virtual void keyPress(int key) = 0;
 };
 
 

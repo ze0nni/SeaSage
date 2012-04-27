@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Display.h
  * Author: onni
  *
@@ -14,9 +14,9 @@ class Display : public IDisplay {
 public:
     Display(ICore *__core);
     virtual ~Display();
-    
+
     virtual void doAction(double t);
-    virtual void doRender(double t);    
+    virtual void doRender(double t);
 private:
 
 };
