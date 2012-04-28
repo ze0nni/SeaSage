@@ -25,6 +25,7 @@ public:
     void run();
     virtual void setActiveDisplay(IDisplay *nextDisplay);
 private:
+    IDisplay *activeDisplay;
     bool doGameLoop;
     void gameLoop();
     void doAction(double t);

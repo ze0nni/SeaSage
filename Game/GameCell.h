@@ -6,8 +6,8 @@
 class GameCell: public ICell
 {
     public:
-        GameCell();
-        virtual ~GameCell();
+        GameCell(IMap *__map);
+        ~GameCell();
     protected:
     private:
 };

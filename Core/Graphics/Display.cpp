@@ -12,6 +12,7 @@ Display::Display(ICore *__core):IDisplay(__core) {
 }
 
 Display::~Display() {
+
 }
 
 void Display::doAction(double t) {

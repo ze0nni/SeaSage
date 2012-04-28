@@ -1,21 +1,32 @@
-#include "IGame.h"
 
 #ifndef GAMEMAP_H
 #define GAMEMAP_H
 
+#include "GL/gl.h"
+
+#include "IGame.h"
+#include "GameCell.h"
+
+#define MAP_CELL_SIZE 0.1f
+
 class GameMap: public IMap
 {
     public:
-        GameMap();
+        GameMap(IGame *__game);
         virtual ~GameMap();
-        bool resize(uint newWidth,uint newHeight);
+        void resize(uint newWidth,uint newHeight);
         uint getWidth();
         uint getHeight();
         ICell getCell(uint cx, uint cy);
+        float getCellSize() {return MAP_CELL_SIZE;}
+        //
+        void renderMap(float rx, float ry, int rsize);
     protected:
     private:
+        ICell ***cells;
         uint width;
         uint height;
+        void deleteCells();
 };
 
 #endif // GAMEMAP_H

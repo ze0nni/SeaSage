@@ -1,6 +1,6 @@
 #include "GameCell.h"
 
-GameCell::GameCell()
+GameCell::GameCell(IMap *__map)
 {
     //ctor
 }

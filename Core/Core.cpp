@@ -55,7 +55,7 @@ void Core::run() {
 }
 
 void Core::setActiveDisplay(IDisplay* nextDisplay) {
-
+    activeDisplay = nextDisplay;
 }
 
 void Core::gameLoop() {
@@ -83,16 +83,16 @@ void Core::doAction(double t) {
     }
 }
 void Core::doRender(double t) {
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glBegin(GL_TRIANGLES); {
-        glVertex2f(-1.0f, 0.0f);
-        glVertex2f(1.0f, 0.0f);
-        glVertex2f(0.0f, 1.0f);
-    } glEnd();
-
+//    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+//    glClear(GL_COLOR_BUFFER_BIT);
+//
+//    glColor3f(1.0f, 0.0f, 0.0f);
+//    glBegin(GL_TRIANGLES); {
+//        glVertex2f(-1.0f, 0.0f);
+//        glVertex2f(1.0f, 0.0f);
+//        glVertex2f(0.0f, 1.0f);
+//    } glEnd();
+    if (activeDisplay) activeDisplay->doRender(t);
     SDL_GL_SwapBuffers();
 }
 
