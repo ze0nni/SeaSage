@@ -24,14 +24,21 @@ public:
     virtual void resize(uint newWidth, uint newHeight) = 0;
     virtual uint getWidth()=0;
     virtual uint getHeight()=0;
-    virtual ICell getCell(uint cx, uint cy)=0;
+    virtual ICell* getCell(uint cx, uint cy)=0;
 private:
     IGame *game;
     virtual float getCellSize()=0;
 };
 
+enum CellType {
+    none,   //Обрыв—будет как падающая вода
+    water,  //Вода, для плавания
+    block   //блоки для сухопутных крыс
+};
 class ICell {
-
+public:
+    virtual CellType getCellType()=0;
+    virtual void setCellType(CellType __cellType)=0;
 };
 
 #endif // IGAME_INCLUDED
