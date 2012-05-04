@@ -7,6 +7,7 @@
 
 #include "IGame.h"
 #include "GameCell.h"
+#include "Display/BoxRenderer.h"
 
 #define MAP_CELL_SIZE 0.5f
 #define MAP_BOX_HIGHT 0.05f
@@ -33,5 +34,4 @@ class GameMap: public IMap
         void initBlocks();
         void deleteBloks();
 };
-
 #endif // GAMEMAP_H

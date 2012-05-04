@@ -32,19 +32,14 @@ void GameMap::resize(uint newWidth, uint newHeight) {
             //Если нет, то создаем новые, пустые
                 newCells[i][j] = new GameCell(this);
             }
-            switch(rand()%3) {
-            case 0:
-                newCells[i][j]->setCellType(none);
-                break;
-            case 1:
-                newCells[i][j]->setCellType(water);
-                break;
-            case 2:
-                newCells[i][j]->setCellType(block);
-                break;
-            }
+            newCells[i][j]->setCellType(none);
         }
     }
+    newCells[7][7]->setCellType(block);
+    newCells[6][7]->setCellType(block);
+    newCells[8][7]->setCellType(block);
+    newCells[7][6]->setCellType(block);
+    newCells[7][8]->setCellType(block);
     //удаляем старую карту
     deleteCells();
     //на ее место ставим новую
@@ -72,22 +67,42 @@ void GameMap::renderMap(float rx, float ry, int rsize) {
     int ex = cx+rsize; if (ex>width-1) ex=width-1;
     int ey = cy+rsize; if (ey>height-1) ey=height-1;
     glPushMatrix();
-    static float r=0.0f;
-    glRotatef(r, 0.0f, 1.0f, 0.0f);
-    r+=1.0f;
+
+    static float ra = 0.0f;
+    ra+=0.5f;
+    glRotatef(ra, 0, 1, 0);
+    glTranslatef(-3.5, 0.0f, -2.5);
     //сместим на центр
-    //glTranslatef(-trsx, 0.0f, -trsy);
     for (int i=sy; i<=ey;i++) {
         glPushMatrix();
         for (int j=sx; j<=ex;j++) {
             switch (cells[i][j]->getCellType()) {
             case block:
-                renderBlock(1);
-                break;
-            case water:
-                renderBlock(0);
+                int mask = 0;
+                if (i==0 || cells[i-1][j]->getCellType()==block) mask |= BLOCK_FILL_TOP;
+                if (j==0 || cells[i][j-1]->getCellType()==block) mask |= BLOCK_FILL_LEFT;
+                if (i==height-1 || cells[i+1][j]->getCellType()==block) mask |= BLOCK_FILL_BOTTOM;
+                if (j==width-1 || cells[i][j+1]->getCellType()==block) mask |= BLOCK_FILL_RIGHT;
+                renderBlock(mask);
                 break;
             }
+            glDisable(GL_LIGHTING);
+            glColor3f(1,0,0);
+            glBegin(GL_LINE_LOOP);
+            glVertex3f(0,0,0);
+            glVertex3f(MAP_CELL_SIZE,0, 0);
+            glVertex3f(MAP_CELL_SIZE,0,MAP_CELL_SIZE);
+            glVertex3f(0,0,MAP_CELL_SIZE);
+            glEnd();
+            glColor3f(1,0,0);
+            glBegin(GL_LINE_LOOP);
+            glVertex3f(0,MAP_BOX_HIGHT,0);
+            glVertex3f(MAP_CELL_SIZE,MAP_BOX_HIGHT, 0);
+            glVertex3f(MAP_CELL_SIZE,MAP_BOX_HIGHT,MAP_CELL_SIZE);
+            glVertex3f(0,MAP_BOX_HIGHT,MAP_CELL_SIZE);
+            glEnd();
+            glEnable(GL_LIGHTING);
+
             glTranslatef(MAP_CELL_SIZE, 0.0f, 0.0f);
         }
         glPopMatrix();
@@ -114,24 +129,10 @@ void GameMap::deleteCells() {
 void GameMap::renderBlock(int id) {
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
-    GLfloat pVerts[]= {
-        0.0f, MAP_BOX_HIGHT*id, 0.0f,
-        0.0f, MAP_BOX_HIGHT*id, MAP_CELL_SIZE,
-        MAP_CELL_SIZE, MAP_BOX_HIGHT*id, 0.0f,
-        MAP_CELL_SIZE, MAP_BOX_HIGHT*id, MAP_CELL_SIZE};
-    GLfloat pNormals[]={
-        0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f};
-    glVertexPointer(3, GL_FLOAT, 0, pVerts);
-    glNormalPointer(GL_FLOAT, 0, pNormals);
-    if (id) {
-        glColor3f(1.0f, 0.8f, 0.0f);
-    } else {
-        glColor3f(0.0f, 0.8f, 1.0f);
-    }
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+
+    BoxRenderer br(id, MAP_CELL_SIZE, MAP_BOX_HIGHT*2);
+    br.Render();
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
