@@ -26,10 +26,10 @@ void GameDisplay::doRender(double t) {
     glPushMatrix();
     glLoadIdentity();
     gluPerspective(75, 800.0f/600.0f, 0.1, 1000);
-    //gluLookAt(0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-    gluLookAt(0.0f, 2.0f, 2.0f,
-              0.0f, -1.0f, 0.0f,
-              0.0f, 1.0f, 0.0f);
+    gluLookAt(0.0f, 1.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+//    gluLookAt(0.0f, 5.0f, 1.0f,
+//              0.0f, -1.0f, 0.0f,
+//              0.0f, 1.0f, 0.0f);
 
     //Рисуем карту
 
@@ -55,7 +55,16 @@ void GameDisplay::doRender(double t) {
     glFogf(GL_FOG_END, 8.0f);
 
     //Рендер
-    map->renderMap(0.0f, 0.0f, 12);
+    static float ox = 0.0f;
+    static float oy = 0.0f;
+    ox += 0.002f;
+    oy += 0.0025f;
+    float mw = map->getWidth()*map->getCellSize();
+    float mh = map->getHeight()*map->getCellSize();
+    map->renderMap(
+                   mw/2+sin(ox)*mw/2,
+                   mh/2+cos(oy)*mh/2,
+                   5);
 
     glDisable(GL_NORMALIZE);
     glDisable(GL_DEPTH_TEST);

@@ -65,9 +65,13 @@ public:
 class IGameObject {
 public:
     virtual bool isSolid(){return false;}
-
+    //Позиция объекта
+    Vector3d *getPosition() {return &position;}
+    //момент скорости
+    Vector3d *getMoment() {return &moment;}
 protected:
-
+    Vector3d position;
+    Vector3d moment;
 };
 
 /**
@@ -104,19 +108,16 @@ public:
     float getSize() {return size;}
     //форма объекта
     Shape getShape() {return shape;}
+    //Группа, к которой относится объект
+    int getObjectGroup() {return objectGroup;}
     //группа объекта для вычисления столкновений
     int getCollisionGroup() {return collisionGroup;}
-    //Позиция объекта
-    Vector3d *getPosition() {return &position;}
-    //момент скорости
-    Vector3d *getMoment() {return &moment;}
     //нанести повреждение
     virtual float demage(float amount, DamageType _type) {return 0;}
 protected:
     float size;
     Shape shape;
+    int objectGroup;
     int collisionGroup;
-    Vector3d position;
-    Vector3d moment;
 };
 #endif // IGAME_INCLUDED

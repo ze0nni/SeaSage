@@ -10,6 +10,8 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+#include <math.h>
+
 class GameDisplay: public Display
 {
     public:

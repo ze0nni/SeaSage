@@ -8,24 +8,37 @@ BoxRenderer::BoxRenderer(int mask, float bs, float bh)
     GLfloat x21 = bh;       GLfloat y21 = bs-bh;
     GLfloat x22 = bs-bh;    GLfloat y22 = bs-bh;
 
-    if (mask & BLOCK_FILL_TOP) {
-            y11-=bh;
-            y12-=bh;
+    bool bt = mask & BLOCK_FILL_TOP;
+    bool br = mask & BLOCK_FILL_RIGHT;
+    bool bb = mask & BLOCK_FILL_BOTTOM;
+    bool bl = mask & BLOCK_FILL_LEFT;
+
+    if (bt) {
+            if (!(bl||br)) {
+                y11-=bh;
+                y12-=bh;
+            }
             quads--;
     }
-    if (mask & BLOCK_FILL_RIGHT) {
-            x12+=bh;
-            x22+=bh;
+    if (br) {
+            if (!(bt||bb)) {
+                x12+=bh;
+                x22+=bh;
+            }
             quads--;
     }
-    if (mask & BLOCK_FILL_BOTTOM){
-            y21+=bh;
-            y22+=bh;
+    if (bb){
+            if (!(bl||br)) {
+                y21+=bh;
+                y22+=bh;
+            }
             quads--;
     }
-    if (mask & BLOCK_FILL_LEFT){
-            x11-=bh;
-            x21-=bh;
+    if (bl){
+            if (!(bt||bb)) {
+                x11-=bh;
+                x21-=bh;
+            }
             quads--;
     }
     //Главный квадрат
