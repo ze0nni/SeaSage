@@ -66,6 +66,10 @@ ICell* GameMap::getCell(uint cx, uint cy) {
 }
 
 void GameMap::renderMap(float rx, float ry, int rsize) {
+    static float angle=0.0f;
+    angle+=0.001f;
+
+
     int cx = (int)(rx/MAP_CELL_SIZE);
     int cy = (int)(ry/MAP_CELL_SIZE);
     int sx = cx-rsize; //if (sx<0) {sx=0;}
@@ -80,6 +84,7 @@ void GameMap::renderMap(float rx, float ry, int rsize) {
     oy=ox;
     ox-=rx-cx*MAP_CELL_SIZE;
     oy-=ry-cy*MAP_CELL_SIZE;
+    glRotated(sin(angle)*360.0f, 0, 1, 0);
     glTranslatef(ox, 0.0f, oy);
     //Рисовать то что нужно
     for (int i=sy; i<=ey;i++) {

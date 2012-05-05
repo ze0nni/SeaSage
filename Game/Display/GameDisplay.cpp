@@ -26,7 +26,7 @@ void GameDisplay::doRender(double t) {
     glPushMatrix();
     glLoadIdentity();
     gluPerspective(75, 800.0f/600.0f, 0.1, 1000);
-    gluLookAt(0.0f, 1.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+    gluLookAt(0.0f, 2.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 //    gluLookAt(0.0f, 5.0f, 1.0f,
 //              0.0f, -1.0f, 0.0f,
 //              0.0f, 1.0f, 0.0f);
@@ -51,8 +51,8 @@ void GameDisplay::doRender(double t) {
     glEnable(GL_FOG);
     glFogi(GL_FOG_MODE, GL_LINEAR);
     glFogfv(GL_FOG_COLOR, fogColor);
-    glFogf(GL_FOG_START, 4.0f);
-    glFogf(GL_FOG_END, 8.0f);
+    glFogf(GL_FOG_START, 2.0f);
+    glFogf(GL_FOG_END, 3.0f);
 
     //Рендер
     static float ox = 0.0f;
@@ -64,7 +64,7 @@ void GameDisplay::doRender(double t) {
     map->renderMap(
                    mw/2+sin(ox)*mw/2,
                    mh/2+cos(oy)*mh/2,
-                   5);
+                   9);
 
     glDisable(GL_NORMALIZE);
     glDisable(GL_DEPTH_TEST);

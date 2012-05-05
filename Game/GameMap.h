@@ -3,6 +3,7 @@
 #define GAMEMAP_H
 
 #include <stdlib.h>
+#include <math.h>
 #include "GL/gl.h"
 
 #include "IGame.h"
