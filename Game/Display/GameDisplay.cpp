@@ -2,6 +2,7 @@
 
 GameDisplay::GameDisplay(IGame *__game):Display(__game->getCore())
 {
+    game=__game;
     map = new GameMap(__game);
     map->resize(64u, 64u);
 }
@@ -12,7 +13,7 @@ GameDisplay::~GameDisplay()
 }
 
 void GameDisplay::doAction(double t) {
-
+    if (game) game->doAction(t);
 }
 
 void GameDisplay::doRender(double t) {
@@ -55,15 +56,13 @@ void GameDisplay::doRender(double t) {
     glFogf(GL_FOG_END, 3.0f);
 
     //Рендер
-    static float ox = 0.0f;
-    static float oy = 0.0f;
-    ox += 0.002f;
-    oy += 0.0025f;
     float mw = map->getWidth()*map->getCellSize();
     float mh = map->getHeight()*map->getCellSize();
+    IPlayer *p= game->getPlayer();
     map->renderMap(
-                   mw/2+sin(ox)*mw/2,
-                   mh/2+cos(oy)*mh/2,
+                   p->getPosition()->x,
+                   p->getPosition()->z,
+                   p->getAngle(),
                    9);
 
     glDisable(GL_NORMALIZE);

@@ -81,6 +81,7 @@ void Core::doAction(double t) {
                 break;
         }
     }
+    if (activeDisplay) activeDisplay->doAction(t);
 }
 void Core::doRender(double t) {
 //    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);

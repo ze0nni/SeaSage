@@ -24,7 +24,7 @@ class GameMap: public IMap
         ICell* getCell(uint cx, uint cy);
         float getCellSize() {return MAP_CELL_SIZE;}
         //
-        void renderMap(float rx, float ry, int rsize);
+        void renderMap(float rx, float ry, float angle, int rsize);
     protected:
     private:
         ICell ***cells;

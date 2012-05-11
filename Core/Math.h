@@ -115,12 +115,36 @@ struct Vector3d {
         return res;
     }
 
+    void add(float _x, float _y, float _z) {
+        this->x += _x;
+        this->y += _y;
+        this->z += _z;
+    }
+
+    void add(Vector3d* v) {
+        this->x += v->x;
+        this->y += v->y;
+        this->z += v->z;
+    }
+
     const Vector3d operator- (const Vector3d v) {
         Vector3d res;
         res.x = x - v.x;
         res.y = y - v.y;
         res.z = z - v.z;
         return res;
+    }
+
+    void sub(float _x, float _y, float _z) {
+        this->x += _x;
+        this->y += _y;
+        this->z += _z;
+    }
+
+    void sub(Vector3d* v) {
+        this->x += v->x;
+        this->y += v->y;
+        this->z += v->z;
     }
 
     const Vector3d operator- () {
@@ -130,6 +154,7 @@ struct Vector3d {
         res.z = -z;
         return res;
     }
+
 
     const Vector3d operator* (const float s) {
         Vector3d res;

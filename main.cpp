@@ -11,6 +11,7 @@
 #include "Game/Display/MainMenu.h"
 #include "Game/Display/GameDisplay.h"
 #include "Game/IGame.h"
+#include "Game/Game.h"
 
 using namespace std;
 
@@ -22,7 +23,9 @@ int main(int argc, char** argv) {
     {
         Core core;
         core.init();
-        IGame game(&core);
+        Game game(&core);
+        IPlayer p(&game);
+        game.setPlayer(&p);
         //core.setActiveDisplay(new MainMenu(&core));
         core.setActiveDisplay(new GameDisplay(&game));
         core.run();

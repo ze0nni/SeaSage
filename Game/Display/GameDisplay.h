@@ -22,6 +22,7 @@ class GameDisplay: public Display
         void doRender(double t);
     protected:
     private:
+        IGame *game;
         GameMap *map;
 };
 
