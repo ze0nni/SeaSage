@@ -2,6 +2,8 @@
 #define IGAME_INCLUDED
 
 #include <math.h>
+#include <list>
+
 #include "../Core/ICore.h"
 #include "../Core/Math.h"
 
@@ -10,6 +12,7 @@ typedef unsigned int uint;
 class ICell;
 class IMap;
 class IPlayer;
+class IGameObject;
 
 /**
 * @brief Ядро игры
@@ -21,10 +24,16 @@ public:
     virtual ~IGame() {getCore()->log("Game object destroy");}
     ICore *getCore() {return core;};
     IPlayer *getPlayer() {return player;}
-    void setPlayer(IPlayer *p){player=p;}
+    void setPlayer(IPlayer *p){
+        player=p;
+        addObject((IGameObject *)p);
+    }
     //
     virtual void doAction(double t)=0;
     virtual void doRender(double t)=0;
+    //
+    virtual void addObject(IGameObject *__obj)=0;
+    virtual void removeObject(IGameObject *__obj)=0;
 protected:
     IPlayer *player;
     ICore *core;
@@ -72,7 +81,15 @@ public:
 */
 class IGameObject {
 public:
-    IGameObject(IGame *g){game=g;};
+    IGameObject(IGame *g){
+        position.setIdentity();
+        moment.setIdentity();
+        angle = 0.0f;
+        angleMoment = 0.0f;
+        game=g;
+    };
+    virtual ~IGameObject() {callRemoveHandlers();}
+
     IGame *getGame() {return game;};
     //
     virtual void doAction(double t){};
@@ -89,12 +106,37 @@ public:
     //Угловой момент
     float getAngleMoment() {return angleMoment;}
     void getAngleMoment(float a) {angleMoment = a;}
+
+    //Регистрирует событие, которое будет вызвано при удалении объекта
+    void onRemove(void* handler, void (*proc)(void*, void*)) {
+        removeHandler *h = new removeHandler ();
+        h->handler = handler;
+        h->proc = proc;
+        removeHandlers.push_back(h);
+    }
 protected:
     IGame *game;
     Vector3d position;
     Vector3d moment;
     float angle;
     float angleMoment;
+private:
+    /*
+    */
+    class removeHandler {
+    public:
+        void *handler;
+        void (*proc)(void*, void*);
+    };
+    std::list<removeHandler*> removeHandlers;
+
+    void callRemoveHandlers() {
+        std::list<removeHandler*>::iterator it;
+        for (it = removeHandlers.begin(); it!=removeHandlers.end(); it++) {
+            (*it)->proc((*it)->handler, this);
+            delete *it;
+        }
+    }
 };
 
 /**
@@ -126,8 +168,13 @@ enum DamageType{
 */
 class ISolidGameObject: public IGameObject {
 public:
-    ISolidGameObject(IGame *g):IGameObject(g){}
+    ISolidGameObject(IGame *g):IGameObject(g){
+        topNormal.setIdentity();
+    }
     bool isSolid(){return true;}
+    //Вектор который показывающий положение вершины
+    //Нужен для имитации раскачиваний на воде
+    Vector3d *getTopNormal() {return &topNormal;}
     //радиус или половина ширины объекта
     float getSize() {return size;}
     //форма объекта
@@ -143,32 +190,40 @@ protected:
     Shape shape;
     int objectGroup;
     int collisionGroup;
+    Vector3d topNormal;
 };
 
 class IPlayer: public ISolidGameObject {
 public:
+    void doAction(double t) {
+        position.add(&moment);
+        angle+=angleMoment;
+        moment = moment * (1.0d - 10.0d * t);//todo *=
+        angleMoment *= (1.0d - 10.0d * t);
+    }
+
     IPlayer(IGame *g):ISolidGameObject(g){}
 
     //Характеристики игрока
 
     //Управление при помощи мыши
     virtual void moveForward(double t){
-        getPosition()->add(
+        moment.add(
                            sin(angle)*t,
                            0.0f,
                            -cos(angle)*t);
     };
     virtual void moveBack(double t){
-        getPosition()->add(
+        moment.add(
                            -sin(angle)*t,
                            0.0f,
                            cos(angle)*t);
     };
     virtual void rotateLeft(double t){
-        angle -= t;
+        angleMoment -= t;
     };
     virtual void rotateRight(double t){
-        angle += t;
+        angleMoment += t;
     };
 
     //Заставляет игрока следовать в указанную точку

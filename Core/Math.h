@@ -107,6 +107,10 @@ struct Vector3d {
         return v;
     }
 
+    void setIdentity() {
+        set(0.0f, 0.0f, 0.0f);
+    }
+
     const Vector3d operator+ (const Vector3d v) {
         Vector3d res;
         res.x = x + v.x;

@@ -4,7 +4,7 @@ GameDisplay::GameDisplay(IGame *__game):Display(__game->getCore())
 {
     game=__game;
     map = new GameMap(__game);
-    map->resize(64u, 64u);
+    map->resize(128u, 128u);
 }
 
 GameDisplay::~GameDisplay()

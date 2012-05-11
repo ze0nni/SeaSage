@@ -24,6 +24,7 @@ int main(int argc, char** argv) {
         Core core;
         core.init();
         Game game(&core);
+
         IPlayer p(&game);
         game.setPlayer(&p);
         //core.setActiveDisplay(new MainMenu(&core));
