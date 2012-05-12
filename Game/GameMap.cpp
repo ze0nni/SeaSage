@@ -34,9 +34,6 @@ void GameMap::resize(uint newWidth, uint newHeight) {
             }
             switch (random()%4) {
             case 0:
-                newCells[i][j]->setCellType(none);
-                break;
-            case 1:
                 newCells[i][j]->setCellType(block);
                 break;
             default:
@@ -90,15 +87,19 @@ void GameMap::renderMap(float rx, float ry, float angle, int rsize) {
             if(j>=0 && j<width)
             {
                 switch (cells[i][j]->getCellType()) {
-                case block:
-                    int mask = 0;
-                    if (i==0 || cells[i-1][j]->getCellType()==block) mask |= BLOCK_FILL_TOP;
-                    if (j==0 || cells[i][j-1]->getCellType()==block) mask |= BLOCK_FILL_LEFT;
-                    if (i==height-1 || cells[i+1][j]->getCellType()==block) mask |= BLOCK_FILL_BOTTOM;
-                    if (j==width-1 || cells[i][j+1]->getCellType()==block) mask |= BLOCK_FILL_RIGHT;
-                    renderBlock(mask);
-                    break;
+                    case water:
+                        renderWater(0);
+                        break;
+                    case block:
+                        int mask = 0;
+                        if (i==0 || cells[i-1][j]->getCellType()==block) mask |= BLOCK_FILL_TOP;
+                        if (j==0 || cells[i][j-1]->getCellType()==block) mask |= BLOCK_FILL_LEFT;
+                        if (i==height-1 || cells[i+1][j]->getCellType()==block) mask |= BLOCK_FILL_BOTTOM;
+                        if (j==width-1 || cells[i][j+1]->getCellType()==block) mask |= BLOCK_FILL_RIGHT;
+                        renderBlock(mask);
+                        break;
                 }
+                /* Сетка
                 glDisable(GL_LIGHTING);
                 glColor3f(1,0,0);
                 glBegin(GL_LINE_LOOP);
@@ -108,6 +109,7 @@ void GameMap::renderMap(float rx, float ry, float angle, int rsize) {
                 glVertex3f(0,0,MAP_CELL_SIZE);
                 glEnd();
                 glEnable(GL_LIGHTING);
+                */
             }
             glTranslatef(MAP_CELL_SIZE, 0.0f, 0.0f);
 
@@ -139,8 +141,28 @@ void GameMap::renderBlock(int id) {
 
 
     BoxRenderer br(id, MAP_CELL_SIZE, MAP_BOX_HIGHT*2);
-    br.Render();
+    br.render();
 
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+}
+
+void GameMap::renderWater(int id) {
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnable(GL_ALPHA_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //Отключить запись в буфер глубины
+
+    static float step =0.0f;
+    step+=0.001f;
+
+    WaterRenderer wr(0, MAP_CELL_SIZE, step, step);
+    wr.render();
+
+    glDisable(GL_ALPHA_TEST);
+    glDisable(GL_BLEND);
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
 }

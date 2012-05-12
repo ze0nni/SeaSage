@@ -17,7 +17,10 @@ void GameDisplay::doAction(double t) {
 }
 
 void GameDisplay::doRender(double t) {
-    GLfloat fogColor[] ={0.8f, 0.9f, 1.0f, 1.0f};
+    static GLfloat fogColor[] ={0.8f, 0.9f, 1.0f, 1.0f};
+
+    //Игрок
+    IPlayer *p= game->getPlayer();
 
     //Очистка
     glClearColor(fogColor[0], fogColor[1], fogColor[2], fogColor[3]);
@@ -28,6 +31,9 @@ void GameDisplay::doRender(double t) {
     glLoadIdentity();
     gluPerspective(75, 800.0f/600.0f, 0.1, 1000);
     gluLookAt(0.0f, 2.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+
+    //поворот камеры
+    glRotatef(p->getAngle()/M_PI*180.0d, 0.0f, 1.0f, 0.0f);
 //    gluLookAt(0.0f, 5.0f, 1.0f,
 //              0.0f, -1.0f, 0.0f,
 //              0.0f, 1.0f, 0.0f);
@@ -58,13 +64,12 @@ void GameDisplay::doRender(double t) {
     //Рендер
     float mw = map->getWidth()*map->getCellSize();
     float mh = map->getHeight()*map->getCellSize();
-    IPlayer *p= game->getPlayer();
     map->renderMap(
                    p->getPosition()->x,
                    p->getPosition()->z,
-                   p->getAngle(),
+                   0.0f,
                    9);
-
+    //
     glDisable(GL_NORMALIZE);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);

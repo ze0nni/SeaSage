@@ -14,13 +14,15 @@ class BoxRenderer
     public:
         BoxRenderer(int mask, float bs, float bh);
         virtual ~BoxRenderer();
-        void Render();
+        void render();
     protected:
     private:
         int quads; //число прямоугольников
         std::vector<GLfloat> V;
         std::vector<GLfloat> N;
         std::vector<GLfloat> UV;
+        void addV(float x, float y, float z);
+        void addN(float x, float y, float z);
 };
 
 #endif // BOXRENDERER_H

@@ -3,8 +3,7 @@
 
 #include "IGame.h"
 
-class GameCell: public ICell
-{
+class GameCell: public ICell {
     public:
         GameCell(IMap *__map);
         ~GameCell();
