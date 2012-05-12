@@ -61,7 +61,7 @@ BoxRenderer::BoxRenderer(int mask, float bs, float bh)
         addV(0, bh, bs); addN(0, bh, 0);
         addV(0, bh, 0); addN(0, bh, 0);
         addV(x11, -bh, y11); addN(-bh, bh, 0);
-        addV(x21, -bh, y21); addN(0-bh, bh, 0);
+        addV(x21, -bh, y21); addN(-bh, bh, 0);
     }
 }
 

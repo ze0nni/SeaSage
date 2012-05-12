@@ -13,6 +13,8 @@
 #include "Game/IGame.h"
 #include "Game/Game.h"
 
+#include "Core/Models/ModelX.h"
+
 using namespace std;
 
 /*
@@ -23,6 +25,10 @@ int main(int argc, char** argv) {
     {
         Core core;
         core.init();
+
+        ModelX model(&core);
+        model.loadFromFile("src/models/box.x");
+
         Game game(&core);
 
         IPlayer p(&game);
