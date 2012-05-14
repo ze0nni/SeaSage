@@ -62,6 +62,26 @@ uint GameMap::getHeight() {
 ICell* GameMap::getCell(uint cx, uint cy) {
 }
 
+void drawBlocksproc(int mask, ICell *c) {
+    if (c->getCellType()==block) {
+        BoxRenderer br(mask, MAP_CELL_SIZE, MAP_BOX_HIGHT*2);
+        glColor3f(0.2f, 0.6f, 0.4f);
+        br.render(GL_QUADS, RENDER_MESH_NORMALS);
+    }
+}
+
+void drawWaterproc(int mask, ICell *c) {
+    if (c->getCellType()==water) {
+    static float step =0.0f;
+        step+=0.001f;
+
+        WaterRenderer wr(0, MAP_CELL_SIZE, step, step);
+
+        glColor4f(0.2f, 0.6f, 0.8f, 0.6f);
+        wr.render(GL_QUADS, RENDER_MESH_NORMALS);
+    }
+}
+
 void GameMap::renderMap(float rx, float ry, float angle, int rsize) {
 
     int cx = (int)(rx/MAP_CELL_SIZE);
@@ -80,36 +100,33 @@ void GameMap::renderMap(float rx, float ry, float angle, int rsize) {
     oy-=ry-cy*MAP_CELL_SIZE;
     glRotated(angle*180.0d/M_PI, 0, 1, 0);
     glTranslatef(ox, 0.0f, oy);
-    //Рисовать то что нужно
+    //Рисуем блоки
+    enumCells(sx, ex, sy, ey, &drawBlocksproc);
+
+    //рисуем воду
+    glEnable(GL_ALPHA_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    enumCells(sx, ex, sy, ey, &drawWaterproc);
+    glDisable(GL_ALPHA_TEST);
+    glDisable(GL_BLEND);
+
+    glPopMatrix();
+}
+
+void GameMap::enumCells(int sx,int ex, int sy, int ey, void(*proc)(int, ICell*)) {
+    glPushMatrix();
     for (int i=sy; i<=ey;i++) {
         glPushMatrix();
         if (i>=0 && i<height)for (int j=sx; j<=ex;j++) {
             if(j>=0 && j<width)
             {
-                switch (cells[i][j]->getCellType()) {
-                    case water:
-                        renderWater(0);
-                        break;
-                    case block:
-                        int mask = 0;
-                        if (i==0 || cells[i-1][j]->getCellType()==block) mask |= BLOCK_FILL_TOP;
-                        if (j==0 || cells[i][j-1]->getCellType()==block) mask |= BLOCK_FILL_LEFT;
-                        if (i==height-1 || cells[i+1][j]->getCellType()==block) mask |= BLOCK_FILL_BOTTOM;
-                        if (j==width-1 || cells[i][j+1]->getCellType()==block) mask |= BLOCK_FILL_RIGHT;
-                        renderBlock(mask);
-                        break;
-                }
-                /* Сетка
-                glDisable(GL_LIGHTING);
-                glColor3f(1,0,0);
-                glBegin(GL_LINE_LOOP);
-                glVertex3f(0,0,0);
-                glVertex3f(MAP_CELL_SIZE,0, 0);
-                glVertex3f(MAP_CELL_SIZE,0,MAP_CELL_SIZE);
-                glVertex3f(0,0,MAP_CELL_SIZE);
-                glEnd();
-                glEnable(GL_LIGHTING);
-                */
+                int mask = 0;
+                if (i==0 || cells[i-1][j]->getCellType()==block) mask |= BLOCK_FILL_TOP;
+                if (j==0 || cells[i][j-1]->getCellType()==block) mask |= BLOCK_FILL_LEFT;
+                if (i==height-1 || cells[i+1][j]->getCellType()==block) mask |= BLOCK_FILL_BOTTOM;
+                if (j==width-1 || cells[i][j+1]->getCellType()==block) mask |= BLOCK_FILL_RIGHT;
+                proc(mask, cells[i][j]);
             }
             glTranslatef(MAP_CELL_SIZE, 0.0f, 0.0f);
 
@@ -133,38 +150,6 @@ void GameMap::deleteCells() {
     cells = 0;
     width = 0;
     height = 0;
-}
-
-void GameMap::renderBlock(int id) {
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-
-
-    BoxRenderer br(id, MAP_CELL_SIZE, MAP_BOX_HIGHT*2);
-    br.render();
-
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-}
-
-void GameMap::renderWater(int id) {
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnable(GL_ALPHA_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //Отключить запись в буфер глубины
-
-    static float step =0.0f;
-    step+=0.001f;
-
-    WaterRenderer wr(0, MAP_CELL_SIZE, step, step);
-    wr.render();
-
-    glDisable(GL_ALPHA_TEST);
-    glDisable(GL_BLEND);
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
 }
 
 void GameMap::initBlocks() {

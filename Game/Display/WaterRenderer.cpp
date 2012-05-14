@@ -15,10 +15,10 @@ WaterRenderer::WaterRenderer(int mask, float bs, float stepx, float stepy)
                 float h1 = sin(x*steps+stepx)*h;
                 float h2 = sin((x+1)*steps+stepx)*h;
 
-                addV(ox, h1, oy);                addN(0, h, 0);
-                addV(ox, h1, oy+secs);           addN(0, h, 0);
-                addV(ox+secs, h2, oy+secs);      addN(0, h, 0);
-                addV(ox+secs, h2, oy);           addN(0, h, 0);
+                addVertexNormal(ox, h1, oy,             0, h, 0);
+                addVertexNormal(ox, h1, oy+secs,        0, h, 0);
+                addVertexNormal(ox+secs, h2, oy+secs,   0, h, 0);
+                addVertexNormal(ox+secs, h2, oy,        0, h, 0);
             }
     }
 }
@@ -26,23 +26,4 @@ WaterRenderer::WaterRenderer(int mask, float bs, float stepx, float stepy)
 WaterRenderer::~WaterRenderer()
 {
     //dtor
-}
-
-void WaterRenderer::render() {
-    glColor4f(0.4f, 0.6f, 1.0f, 0.6f);
-    glVertexPointer(3, GL_FLOAT, 0, V.data());
-    glNormalPointer(GL_FLOAT, 0, N.data());
-    glDrawArrays(GL_QUADS, 0, V.size()/3);
-}
-
-void WaterRenderer::addV(float x, float y, float z) {
-    V.push_back(x);
-    V.push_back(y);
-    V.push_back(z);
-}
-
-void WaterRenderer::addN(float x, float y, float z) {
-    N.push_back(x);
-    N.push_back(y);
-    N.push_back(z);
 }

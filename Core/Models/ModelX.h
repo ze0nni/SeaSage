@@ -3,14 +3,19 @@
 
 #include "../ICore.h"
 #include "Model.h"
+#include <stdio.h>
+#include <string.h>
 #include <iostream>
 
 struct FileXHead {
-    char Signature[3]; //"xof"
-    char space;
+    char signature[3]; //"xof"
+    char signatureSpace;
     char HIversion[2];
     char LOversion[2];
     char format[3];    //"txt"
+    char formatSpace;
+    char floatSize[4]; //размер вещественного числа в битах
+    char floatSizeSpace;
 };
 
 class ModelX: public Model
@@ -21,6 +26,7 @@ class ModelX: public Model
         bool load(istream *in);
     protected:
     private:
+        bool loadTxt(istream *in);
 };
 
 #endif // MODELX_H

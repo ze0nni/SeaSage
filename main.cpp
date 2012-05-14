@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 
         ModelX model(&core);
         model.loadFromFile("src/models/box.x");
-
+        //return 0;
         Game game(&core);
 
         IPlayer p(&game);

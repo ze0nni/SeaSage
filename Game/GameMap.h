@@ -10,6 +10,7 @@
 #include "GameCell.h"
 #include "Display/BoxRenderer.h"
 #include "Display/WaterRenderer.h"
+#include "../Core/Models/ModelMesh.h"
 
 #define MAP_CELL_SIZE 0.5f
 #define MAP_BOX_HIGHT 0.05f
@@ -32,9 +33,8 @@ class GameMap: public IMap
         uint width;
         uint height;
         void deleteCells();
-        void renderBlock(int id);
-        void renderWater(int id);
         void initBlocks();
         void deleteBloks();
+        void enumCells(int sx,int ex, int sy, int ey, void(*proc)(int, ICell*));
 };
 #endif // GAMEMAP_H

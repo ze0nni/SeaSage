@@ -6,13 +6,13 @@
 #include <vector>
 #include "GL/gl.h"
 
+#include "../../Core/Models/ModelMesh.h"
 
-class WaterRenderer
+class WaterRenderer: public ModelMesh
 {
     public:
         WaterRenderer(int mask, float bs, float stepx, float stepy);
         virtual ~WaterRenderer();
-        void render();
     protected:
     private:
         class WaveVertex: public Vector3d {
@@ -23,13 +23,6 @@ class WaterRenderer
                        WaveVertex* _left) {
             }
         };
-
-        int quads; //число прямоугольников
-        std::vector<GLfloat> V;
-        std::vector<GLfloat> N;
-        std::vector<GLfloat> UV;
-        void addV(float x, float y, float z);
-        void addN(float x, float y, float z);
 };
 
 #endif // WATERRENDERER_H
