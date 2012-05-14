@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#include "../Script/TextParser.h"
 
 struct FileXHead {
     char signature[3]; //"xof"

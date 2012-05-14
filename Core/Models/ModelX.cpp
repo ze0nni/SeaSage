@@ -30,9 +30,14 @@ bool ModelX::load(istream *in) {
     return false;
 }
 
+void parseProc(void* state, int flag, string s) {
+    if (flag != PARSE_FLAG_WORD) return;
+    printf("%s ", s.c_str());
+}
+
 bool ModelX::loadTxt(istream *in) {
-    char line[512];
-    in->getline(line, sizeof(line));
-    in->getline(line, sizeof(line));
-    printf("%s\n", line);
+    TextParser parser(0, in);
+
+    parser.setDelimiter(" ,;\n\r\t");
+    parser.parse(this, &parseProc);
 }
