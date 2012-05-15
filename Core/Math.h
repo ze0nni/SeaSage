@@ -17,6 +17,10 @@ struct Matrix4d {
         };
     };
 
+    float* data() {
+        return vector;
+    }
+
     void set(float c11, float c12, float c13, float c14,
              float c21, float c22, float c23, float c24,
              float c31, float c32, float c33, float c34,

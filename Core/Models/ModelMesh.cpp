@@ -2,6 +2,7 @@
 
 ModelMesh::ModelMesh()
 {
+    transformMatrix.setIdentity();
     //ctor
 }
 
@@ -54,6 +55,8 @@ void ModelMesh::rawAddUV(float u, float v){
 void ModelMesh::render(int glMode, const int flags) {
     bool drawNormals = (flags & RENDER_MESH_NORMALS) != 0;
     bool drawUV = (flags & RENDER_MESH_UV) != 0;
+    bool drawChild = (flags & RENDER_MESH_CHILD) != 0;
+    bool doTransform = (flags & RENDER_MESH_TRANSFORM) != 0;
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, 0, vertex.data());
@@ -67,9 +70,29 @@ void ModelMesh::render(int glMode, const int flags) {
             glTexCoordPointer(2, GL_FLOAT, 0, uvCoords.data());
     }
 
+    if (doTransform) {
+        glPushMatrix();
+        glMultMatrixf(transformMatrix.data());
+    }
+
     glDrawArrays(glMode, 0, vertex.size()/3);
+    if (drawChild) {
+        //todo:
+    }
+
+    if (doTransform) {
+        glPopMatrix();
+    }
+
 
     if (drawNormals) glDisableClientState(GL_NORMAL_ARRAY);
     if (drawUV) glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+void ModelMesh::addChild(std::string name, ModelMesh* __mesh) {
+    if (child.count(name)) {
+        delete child[name];
+    }
+    child[name] = __mesh;
 }

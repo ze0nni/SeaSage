@@ -10,10 +10,6 @@
 #include <cstring>
 #include <sstream>
 
-#define PARSE_FLAG_END 0
-#define PARSE_FLAG_WORD 1
-#define PARSE_FLAG_DELIMITER 2
-
 using namespace std;
 
 class TextParser
@@ -21,16 +17,19 @@ class TextParser
     public:
         TextParser(ICore *__core, istream *__in);
         TextParser(ICore *__core, string s);
+        // todo:~TextParser()
         virtual ~TextParser();
 
         void setDelimiter(char *s) {delimiter=s;};
-        void parse(void* state, void (*proc)(void*, int, string));
+        void setSpaces(char *s) {spaces=s;};
+        void parse(void* state, bool (*proc)(void*, int, string, int, int));
         void parse(ParserBlock *block);
     protected:
     private:
         ICore *core;
         stringstream in;
         string delimiter;
+        string spaces;
 };
 
 #endif // TEXTPARSER_H

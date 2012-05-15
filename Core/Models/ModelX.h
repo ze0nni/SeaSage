@@ -7,6 +7,7 @@
 #include <string.h>
 #include <iostream>
 #include "../Script/TextParser.h"
+#include "../Script/ParserBlock.h"
 
 struct FileXHead {
     char signature[3]; //"xof"
@@ -18,6 +19,8 @@ struct FileXHead {
     char floatSize[4]; //размер вещественного числа в битах
     char floatSizeSpace;
 };
+
+class ModelXParser;
 
 class ModelX: public Model
 {

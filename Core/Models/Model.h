@@ -1,9 +1,11 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "../ICore.h"
 #include <iostream>
 #include <fstream>
+
+#include "../ICore.h"
+#include "ModelMesh.h"
 
 using namespace std;
 
@@ -17,8 +19,11 @@ class Model
 
         bool loadFromFile(char *filename);
         virtual bool load(istream *in)=0;
+
+        ModelMesh *getRootMesh(){return &rootMesh;};
     protected:
     private:
+        ModelMesh rootMesh;
         ICore *core;
 };
 

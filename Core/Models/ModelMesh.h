@@ -3,10 +3,17 @@
 
 #include <stdio.h>
 #include <vector>
+#include <map>
+#include <string>
+
+#include "../Math.h"
+
 #include <GL/gl.h>
 
 #define RENDER_MESH_NORMALS 1
 #define RENDER_MESH_UV 2
+#define RENDER_MESH_CHILD 4
+#define RENDER_MESH_TRANSFORM 8
 
 class ModelMesh
 {
@@ -23,8 +30,12 @@ class ModelMesh
         void rawAddUV(float u, float v);
 
         void render(int glMode, const int flags);
+        void setTransformMatrix(Matrix4d &m){transformMatrix=m;}
+        void addChild(std::string name, ModelMesh* __mesh);
     protected:
     private:
+        Matrix4d transformMatrix;
+        std::map<std::string, ModelMesh*> child;
         std::vector<GLfloat> vertex;
         std::vector<GLfloat> normals;
         std::vector<GLfloat> uvCoords;
