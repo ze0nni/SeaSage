@@ -66,10 +66,26 @@ bool TextParser::next(char __c) {
     return false;
 }
 
+bool TextParser::nextn(char __c) {
+    char c;
+    while (in.get(c)) {
+        if (in.peek()!=__c) return true;
+    }
+    return false;
+}
+
 bool TextParser::next(char* __s) {
     char c;
     while (in.get(c)) {
         if (strchr(__s, in.peek())) return true;
+    }
+    return false;
+}
+
+bool TextParser::nextn(char* __s) {
+    char c;
+    while (in.get(c)) {
+        if (!strchr(__s, in.peek())) return true;
     }
     return false;
 }

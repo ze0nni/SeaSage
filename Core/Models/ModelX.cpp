@@ -32,5 +32,8 @@ bool ModelX::load(istream *in) {
 
 bool ModelX::loadTxt(istream *in) {
     TextParser parser(0, in);
-
+    parser.seekToSpacesEnd();
+    parser.push();
+    parser.seekToSpacesBegin();
+    printf("out: <%s>\n", parser.popString().c_str());
 }
