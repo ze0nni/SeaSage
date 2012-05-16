@@ -124,13 +124,13 @@ class TextParser
         возвращает целое число
         */
         int readInt() {
-            return atoi(readTokenOfChar("0123456789").c_str());
+            return atoi(readTokenOfChar("-0123456789").c_str());
         }
         /**
         возвращает вещественное число
         */
         float readFloat() {
-            return atof(readTokenOfChar(".0123456789").c_str());
+            return atof(readTokenOfChar("-.0123456789").c_str());
         }
         /**
         Возвращает строку заключенную между символами q
