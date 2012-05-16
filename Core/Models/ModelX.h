@@ -7,7 +7,7 @@
 #include <string.h>
 #include <iostream>
 #include "../Script/TextParser.h"
-#include "../Script/ParserBlock.h"
+#include "../Math.h"
 
 struct FileXHead {
     char signature[3]; //"xof"
@@ -31,6 +31,11 @@ class ModelX: public Model
     protected:
     private:
         bool loadTxt(istream *in);
+
+        bool readFrameBlock(TextParser *p, ModelMesh* parent);
+        bool readMatrix(TextParser *p, Matrix4d &m);
+        bool readMesh(TextParser *p, ModelMesh* mesh);
+        bool readMeshMaterialList(TextParser *p, ModelMesh* mesh);
 };
 
 #endif // MODELX_H

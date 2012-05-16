@@ -6,12 +6,14 @@ TextParser::TextParser(ICore *__core, istream *__in) {
     while (std::getline(*__in, line)) {
         in << line << endl;
     }
+    in << '\0';
     in.seekp(0);
 }
 
 TextParser::TextParser(ICore *__core, string __s) {
     core = __core;
     in << __s;
+    in << '\0';
     in.seekg(0);
 }
 
@@ -34,6 +36,13 @@ void TextParser::pop(){
 }
 
 string TextParser::retString(){
+    int ret = position.top();
+    string res = popString();
+    in.seekg(ret);
+    return res;
+}
+
+string TextParser::popString(){
     int ss = position.top(); //string start
     position.pop();
     int se = in.tellg(); //string end
@@ -45,20 +54,13 @@ string TextParser::retString(){
     return string (buff, se-ss);
 }
 
-string TextParser::popString(){
-    int ret = position.top();
-    string res = retString();
-    in.seekg(ret);
-    return res;
-}
-
 char TextParser::next() {
     char c;
     in.get(c);
     return c;
 }
 
-bool TextParser::next(char __c) {
+bool TextParser::next(const char __c) {
     char c;
     while (in.get(c)) {
         if (in.peek()==__c) return true;
@@ -66,7 +68,7 @@ bool TextParser::next(char __c) {
     return false;
 }
 
-bool TextParser::nextn(char __c) {
+bool TextParser::nextn(const char __c) {
     char c;
     while (in.get(c)) {
         if (in.peek()!=__c) return true;
@@ -74,7 +76,7 @@ bool TextParser::nextn(char __c) {
     return false;
 }
 
-bool TextParser::next(char* __s) {
+bool TextParser::next(const char* __s) {
     char c;
     while (in.get(c)) {
         if (strchr(__s, in.peek())) return true;
@@ -82,7 +84,7 @@ bool TextParser::next(char* __s) {
     return false;
 }
 
-bool TextParser::nextn(char* __s) {
+bool TextParser::nextn(const char* __s) {
     char c;
     while (in.get(c)) {
         if (!strchr(__s, in.peek())) return true;
@@ -90,7 +92,7 @@ bool TextParser::nextn(char* __s) {
     return false;
 }
 
-bool TextParser::nextp(bool proc(char)) {
+bool TextParser::nextp(bool proc(const char)) {
     char c;
     while (in.get(c)) {
         if (proc(in.peek())) return true;
@@ -100,6 +102,20 @@ bool TextParser::nextp(bool proc(char)) {
 
 char TextParser::peek() {
     return in.peek();
+}
+
+string TextParser::readRawString(const char q) {
+}
+
+string TextParser::readEscString(const char q) {
+
+}
+
+string TextParser::readRawString() {
+
+}
+
+string TextParser::readEscString() {
 }
 
 /*
