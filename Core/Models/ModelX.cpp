@@ -33,6 +33,4 @@ bool ModelX::load(istream *in) {
 bool ModelX::loadTxt(istream *in) {
     TextParser parser(0, in);
 
-    parser.setDelimiter(",;");
-    parser.setSpaces(" \n\r\t");
 }
