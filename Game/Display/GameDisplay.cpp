@@ -67,15 +67,19 @@ void GameDisplay::doRender(double t) {
     //Рендер
     float mw = map->getWidth()*map->getCellSize();
     float mh = map->getHeight()*map->getCellSize();
+
+    glPushMatrix();
+    glScalef(0.2f, 0.2f, 0.2f);
+    glTranslatef(0.0f, 0.5f, 0.0f);
+    glColor3f(1.0f, 1.0f, 1.0f);
+    model->render(GL_TRIANGLES, RENDER_MESH_CHILD|RENDER_MESH_NORMALS|RENDER_MESH_TRANSFORM);
+    glPopMatrix();
+
     map->renderMap(
                    p->getPosition()->x,
                    p->getPosition()->z,
                    0.0f,
                    9);
-    glPushMatrix();
-    glScalef(0.2f, 0.2f, 0.2f);
-    model->render(GL_TRIANGLES, RENDER_MESH_CHILD);
-    glPopMatrix();
     //
     glDisable(GL_NORMALIZE);
     glDisable(GL_DEPTH_TEST);

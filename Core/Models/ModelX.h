@@ -36,6 +36,7 @@ class ModelX: public Model
         bool readVector(TextParser *p, Vector3d &v);
         bool readMatrix(TextParser *p, Matrix4d &m);
         bool readMesh(TextParser *p, ModelMesh* mesh);
+        bool readNormals(TextParser *p, ModelMesh* mesh);
         bool readMeshMaterialList(TextParser *p, ModelMesh* mesh);
 };
 

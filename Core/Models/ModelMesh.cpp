@@ -57,15 +57,27 @@ void ModelMesh::rawAddVertex(float x, float y, float z){
     vertex.push_back(z);
 }
 
+void ModelMesh::rawAddVertex(Vector3d v) {
+    rawAddVertex(v.x, v.y, v.z);
+}
+
 void ModelMesh::rawAddNormal(float x, float y, float z){
     normals.push_back(x);
     normals.push_back(y);
     normals.push_back(z);
 }
 
+void ModelMesh::rawAddNormal(Vector3d v) {
+    rawAddNormal(v.x, v.y, v.z);
+}
+
 void ModelMesh::rawAddUV(float u, float v){
     uvCoords.push_back(u);
     uvCoords.push_back(v);
+}
+
+void ModelMesh::rawAddUV(Vector3d v) {
+    rawAddUV(v.x, v.y);
 }
 
 void ModelMesh::render(int glMode, const int flags) {
