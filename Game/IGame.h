@@ -198,7 +198,7 @@ public:
     void doAction(double t) {
         position.add(&moment);
         angle+=angleMoment;
-        moment = moment * (1.0d - 10.0d * t);//todo *=
+        moment = moment * (1.0d - 7.0d * t);//todo *=
         angleMoment *= (1.0d - 10.0d * t);
     }
 
@@ -209,15 +209,15 @@ public:
     //Управление при помощи мыши
     virtual void moveForward(double t){
         moment.add(
-                           sin(angle)*t,
+                           sin(angle)*t*0.6f,
                            0.0f,
-                           -cos(angle)*t);
+                           -cos(angle)*t*0.6f);
     };
     virtual void moveBack(double t){
         moment.add(
-                           -sin(angle)*t,
+                           -sin(angle)*t*0.4f,
                            0.0f,
-                           cos(angle)*t);
+                           cos(angle)*t*0.4f);
     };
     virtual void rotateLeft(double t){
         angleMoment -= t;
