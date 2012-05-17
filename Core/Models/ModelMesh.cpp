@@ -17,10 +17,18 @@ void ModelMesh::addVertex(float x, float y, float z){
     rawAddUV(x, z);
 }
 
+void ModelMesh::addVertex(const Vector3d v) {
+    addVertex(v.x, v.y, v.z);
+}
+
 void ModelMesh::addVertexNormal(float x, float y, float z, float nx, float ny, float nz){
     rawAddVertex(x, y, z);
     rawAddNormal(nx, ny, nz);
     rawAddUV(x, z);
+}
+
+void ModelMesh::addVertexNormal(const Vector3d v, const Vector3d n) {
+    addVertexNormal(v.x, v.y, v.z, n.x, n.y, n.z);
 }
 
 void ModelMesh::addVertexUV(float x, float y, float z, float u, float v){
@@ -29,10 +37,18 @@ void ModelMesh::addVertexUV(float x, float y, float z, float u, float v){
     rawAddUV(u, v);
 }
 
+void ModelMesh::addVertexUV(const Vector3d v, const Vector3d uv) {
+    addVertexUV(v.x, v.y, v.z, uv.x, uv.y);
+}
+
 void ModelMesh::addVertexNormalUV(float x, float y, float z, float nx, float ny, float nz, float u, float v){
     rawAddVertex(x, y, z);
     rawAddNormal(nx, ny, nz);
     rawAddUV(y, v);
+}
+
+void ModelMesh::addVertexNormalUV(const Vector3d v, const Vector3d n, const Vector3d uv) {
+    addVertexNormalUV(v.x, v.y, v.z, n.x, n.y, n.z, uv.x, uv.y);
 }
 
 void ModelMesh::rawAddVertex(float x, float y, float z){
@@ -77,7 +93,10 @@ void ModelMesh::render(int glMode, const int flags) {
 
     glDrawArrays(glMode, 0, vertex.size()/3);
     if (drawChild) {
-        //todo:
+        std::map<std::string, ModelMesh*>::iterator it;
+        for (it=child.begin(); it!=child.end(); it++) {
+            (*it).second->render(glMode, flags);
+        }
     }
 
     if (doTransform) {

@@ -20,10 +20,14 @@ class ModelMesh
     public:
         ModelMesh();
         virtual ~ModelMesh();
-        void addVertex(float x, float y, float z);
-        void addVertexNormal(float x, float y, float z, float nx, float ny, float nz);
-        void addVertexUV(float x, float y, float z, float u, float v);
-        void addVertexNormalUV(float x, float y, float z, float nx, float ny, float nz, float u, float v);
+        void addVertex(const float x, const float y, const float z);
+        void addVertex(const Vector3d v);
+        void addVertexNormal(const float x, const float y, const float z, const float nx, const float ny, const float nz);
+        void addVertexNormal(const Vector3d v, const Vector3d n);
+        void addVertexUV(const float x, const float y, const float z, const float u, const float v);
+        void addVertexUV(const Vector3d v, const Vector3d uv);
+        void addVertexNormalUV(const float x, const float y, const float z, const float nx, const float ny, const float nz, const float u, const float v);
+        void addVertexNormalUV(const Vector3d v, const Vector3d n, const Vector3d uv);
 
         void rawAddVertex(float x, float y, float z);
         void rawAddNormal(float x, float y, float z);

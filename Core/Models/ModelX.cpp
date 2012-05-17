@@ -61,8 +61,8 @@ bool ModelX::readFrameBlock(TextParser *p, ModelMesh *parent) {
     } else {
         mesh =getRootMesh();
     }
-    //перемещаемся к открывающейся скобке
-    p->next('{');
+    //читаем начало, и пропускаем комментарий
+    p->next('{'); p->seekToEndLine();
     do {
         string tk = p->readToken();
         if (tk=="Frame") {
@@ -93,9 +93,18 @@ bool ModelX::readFrameBlock(TextParser *p, ModelMesh *parent) {
     return true;
 }
 
+bool ModelX::readVector(TextParser *p, Vector3d &v) {
+    float x = p->readFloat();
+    float z = p->readFloat();
+    float y = p->readFloat();
+    p->seekToEndLine();
+    v.set(x, y, z);
+    return true;
+}
+
 bool ModelX::readMatrix(TextParser *p, Matrix4d &m) {
-    //читаем начало
-    p->next('{');
+    //читаем начало, и пропускаем комментарий
+    p->next('{'); p->seekToEndLine();
     //читаем значения
     for (int i=0; i<16; i++) {
         m.vector[i] = p->readFloat();
@@ -106,17 +115,52 @@ bool ModelX::readMatrix(TextParser *p, Matrix4d &m) {
 }
 
 bool ModelX::readMesh(TextParser *p, ModelMesh* mesh) {
-    //читаем начало
-    p->next('{');
+    //читаем начало, и пропускаем комментарий
+    p->next('{'); p->seekToEndLine();
+
+    int vertexCount = p->readInt();
+    Vector3d vertex[vertexCount];
+
+    for(int i=0; i<vertexCount; i++) {
+        if (!readVector(p, vertex[i])) return false;
+    }
+
+    int facesCount = p->readInt();
+    for (int i=0; i<facesCount; i++) {
+        int vc = p->readInt();//Число вершин
+        int v[vc];//индексы вершин
+        for(int vi=0; vi<vc; vi++)
+            v[vi] = p->readInt();
+        switch (vc) {
+        case 3:
+            mesh->addVertex(vertex[v[0]]);
+            mesh->addVertex(vertex[v[1]]);
+            mesh->addVertex(vertex[v[2]]);
+            break;
+        case 4:
+            mesh->addVertex(vertex[v[0]]);
+            mesh->addVertex(vertex[v[1]]);
+            mesh->addVertex(vertex[v[2]]);
+            mesh->addVertex(vertex[v[0]]);
+            mesh->addVertex(vertex[v[2]]);
+            mesh->addVertex(vertex[v[3]]);
+            break;
+        default:
+            getCore()->errlog("Wrong vertex count for face: %d", vc);
+            return false;
+        }
+        p->seekToEndLine();
+    }
 
     //закрываем
     p->next('}');
+    mesh->render(GL_LINE_LOOP, 0);
     return true;
 }
 
 bool ModelX::readMeshMaterialList(TextParser *p, ModelMesh* mesh) {
-    //читаем начало
-    p->next('{');
+    //читаем начало, и пропускаем комментарий
+    p->next('{'); p->seekToEndLine();
 
     //закрываем
     p->next('}');

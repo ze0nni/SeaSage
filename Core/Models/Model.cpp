@@ -18,3 +18,7 @@ bool Model::loadFromFile(char *filename) {
         return false;
     }
 }
+
+void Model::render(int glMode, int flags) {
+    rootMesh.render(glMode, flags);
+}

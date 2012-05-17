@@ -21,6 +21,7 @@ class Model
         virtual bool load(istream *in)=0;
 
         ModelMesh *getRootMesh(){return &rootMesh;};
+        void render(const int glMode, const int flags);
     protected:
     private:
         ModelMesh rootMesh;

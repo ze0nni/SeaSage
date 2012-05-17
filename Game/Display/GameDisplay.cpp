@@ -5,6 +5,9 @@ GameDisplay::GameDisplay(IGame *__game):Display(__game->getCore())
     game=__game;
     map = new GameMap(__game);
     map->resize(128u, 128u);
+
+    model = new ModelX(__game->getCore());
+    model->loadFromFile("src/models/box.x");
 }
 
 GameDisplay::~GameDisplay()
@@ -69,6 +72,10 @@ void GameDisplay::doRender(double t) {
                    p->getPosition()->z,
                    0.0f,
                    9);
+    glPushMatrix();
+    glScalef(0.2f, 0.2f, 0.2f);
+    model->render(GL_TRIANGLES, RENDER_MESH_CHILD);
+    glPopMatrix();
     //
     glDisable(GL_NORMALIZE);
     glDisable(GL_DEPTH_TEST);

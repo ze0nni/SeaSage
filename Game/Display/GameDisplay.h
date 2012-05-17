@@ -3,7 +3,7 @@
 
 #include "../../Core/ICore.h"
 #include "../../Core/Graphics/Display.h"
-#include "../../Core/Models/ModelMesh.h"
+#include "../../Core/Models/ModelX.h"
 
 #include "../IGame.h"
 #include "../GameMap.h"
@@ -23,7 +23,7 @@ class GameDisplay: public Display
         void doRender(double t);
     protected:
     private:
-        ModelMesh mesh;
+        ModelX *model;
         IGame *game;
         GameMap *map;
 };

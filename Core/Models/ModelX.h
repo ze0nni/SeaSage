@@ -33,6 +33,7 @@ class ModelX: public Model
         bool loadTxt(istream *in);
 
         bool readFrameBlock(TextParser *p, ModelMesh* parent);
+        bool readVector(TextParser *p, Vector3d &v);
         bool readMatrix(TextParser *p, Matrix4d &m);
         bool readMesh(TextParser *p, ModelMesh* mesh);
         bool readMeshMaterialList(TextParser *p, ModelMesh* mesh);
