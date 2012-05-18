@@ -29,6 +29,15 @@ class GameMap: public IMap
         void renderMap(float rx, float ry, float angle, int rsize);
     protected:
     private:
+        void initWater();
+        void deleteWater();
+        void renderWater();
+        int waterSize;
+        float  *waterWave;
+        GLfloat *waterVertex;
+        GLfloat *waterNormal;
+        GLint *waterIndex;
+
         ICell ***cells;
         uint width;
         uint height;

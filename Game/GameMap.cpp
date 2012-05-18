@@ -6,12 +6,14 @@ GameMap::GameMap(IGame *__game): IMap(__game)
     width=0;
     height=0;
     initBlocks();
+    initWater();
 }
 
 GameMap::~GameMap()
 {
     deleteCells();
     deleteBloks();
+    deleteWater();
 }
 
 void GameMap::resize(uint newWidth, uint newHeight) {
@@ -83,6 +85,7 @@ void drawWaterproc(int mask, ICell *c) {
 }
 
 void GameMap::renderMap(float rx, float ry, float angle, int rsize) {
+    renderWater();
 
     int cx = (int)(rx/MAP_CELL_SIZE);
     int cy = (int)(ry/MAP_CELL_SIZE);
@@ -157,4 +160,45 @@ void GameMap::initBlocks() {
 }
 
 void GameMap::deleteBloks() {
+}
+
+//
+void GameMap::initWater() {
+    waterSize = 8;
+    //n^2
+    waterWave = new float[waterSize*waterSize];
+    //n^2*3
+    waterVertex = new float[waterSize*waterSize*3];
+    //n^2*3
+    waterNormal = new float[waterSize*waterSize*3];
+    //(n-1)^2*2
+    waterIndex = new int[(waterSize-1)*(waterSize-1)*2];
+    for (int i=0; i<waterSize*waterSize; i++) {
+        waterVertex[i*3+0] = rand()%10-5;
+        waterVertex[i*3+1] = 0.0f;
+        waterVertex[i*3+2] = rand()%10-5;
+    }
+    for (int i=0; i<waterSize*waterSize; i++) {
+        waterIndex[i] = i;
+    }
+}
+
+void GameMap::deleteWater() {
+
+}
+
+void GameMap::renderWater() {
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_INDEX_ARRAY);
+
+    glVertexPointer(3, GL_FLOAT, 0, waterVertex);
+    glNormalPointer(GL_FLOAT, 0, waterNormal);
+    glIndexPointer(GL_INT, 0, waterIndex);
+    glColor3f(1, 0, 0);
+    glDrawArrays(GL_LINE_LOOP, 0, waterSize*waterSize);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_INDEX_ARRAY);
 }
