@@ -168,15 +168,20 @@ void GameMap::initWater() {
     //n^2
     waterWave = new float[waterSize*waterSize];
     //n^2*3
-    waterVertex = new float[waterSize*waterSize*3];
+    waterVertex = new float[waterSize*waterSize*4];
     //n^2*3
     waterNormal = new float[waterSize*waterSize*3];
     //(n-1)^2*2
     waterIndex = new int[(waterSize-1)*(waterSize-1)*2];
     for (int i=0; i<waterSize*waterSize; i++) {
-        waterVertex[i*3+0] = rand()%10-5;
-        waterVertex[i*3+1] = 0.0f;
-        waterVertex[i*3+2] = rand()%10-5;
+        //waterVertex[i*3+0] = rand()%10-5;
+        //waterVertex[i*3+1] = (rand()%10-5)/10.0f;
+        //waterVertex[i*3+2] = rand()%10-5;
+    }
+    for (int i=0;i<waterSize; i++) {
+        for (int j=0;j<waterSize; j++) {
+
+        }
     }
     for (int i=0; i<waterSize*waterSize; i++) {
         waterIndex[i] = i;

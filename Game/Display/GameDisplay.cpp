@@ -26,8 +26,9 @@ void GameDisplay::doRender(double t) {
     IPlayer *p= game->getPlayer();
 
     //Очистка
-    glClearColor(fogColor[0], fogColor[1], fogColor[2], fogColor[3]);
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    //glClearColor(fogColor[0], fogColor[1], fogColor[2], fogColor[3]);
+    //glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT);
     //Устанавливаем перспективную проекцию
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
@@ -69,20 +70,36 @@ void GameDisplay::doRender(double t) {
     //тк иначе будут пробемы с тумано
     glPushMatrix();
     glRotatef(p->getAngle()/M_PI*180.0d, 0.0f, 1.0f, 0.0f);
+
+    //рисование SkyBox
+        {
+            glDisable(GL_LIGHTING);
+            glDepthFunc(GL_ALWAYS);
+            glDepthMask(0);
+            SkyBox sbox("");
+            glColor3fv(fogColor);
+            sbox.render(GL_QUADS, RENDER_MESH_NORMALS|RENDER_MESH_UV);
+            glDepthFunc(GL_LEQUAL);
+            glDepthMask(1);
+            glEnable(GL_LIGHTING);
+        }
+
     {
         glPushMatrix();
         glRotatef(-p->getAngle()/M_PI*180.0d, 0.0f, 1.0f, 0.0f);
         glScalef(0.1f, 0.1f, 0.1f);
         //glTranslatef(0.0f, 0.5f, 0.0f);
+
         glColor3f(0.6f, 0.6f, 0.6f);
         model->render(GL_TRIANGLES, RENDER_MESH_CHILD|RENDER_MESH_NORMALS|RENDER_MESH_TRANSFORM);
         glPopMatrix();
+
 
         map->renderMap(
                        p->getPosition()->x,
                        p->getPosition()->z,
                        0.0f,
-                       15);
+                       12);
     }
     glPopMatrix();
     //

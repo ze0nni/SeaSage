@@ -7,6 +7,7 @@
 
 #include "../IGame.h"
 #include "../GameMap.h"
+#include "SkyBox.h"
 
 #include <GL/gl.h>
 #include <GL/glu.h>
