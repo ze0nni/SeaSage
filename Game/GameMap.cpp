@@ -66,9 +66,9 @@ ICell* GameMap::getCell(uint cx, uint cy) {
 
 void drawBlocksproc(int mask, ICell *c) {
     if (c->getCellType()==block) {
-        BoxRenderer br(mask, MAP_CELL_SIZE, MAP_BOX_HIGHT*2);
+        //BoxRenderer br(mask, MAP_CELL_SIZE, MAP_BOX_HIGHT*2);
         glColor3f(0.2f, 0.6f, 0.4f);
-        br.render(GL_QUADS, RENDER_MESH_NORMALS);
+        c->getMap()->renderBlock(mask);
     }
 }
 
@@ -84,9 +84,11 @@ void drawWaterproc(int mask, ICell *c) {
     }
 }
 
-void GameMap::renderMap(float rx, float ry, float angle, int rsize) {
-    renderWater();
+void GameMap::doAction(double t) {
+        waterSurface->action(t);
+}
 
+void GameMap::renderMap(float rx, float ry, float angle, int rsize) {
     int cx = (int)(rx/MAP_CELL_SIZE);
     int cy = (int)(ry/MAP_CELL_SIZE);
     int sx = cx-rsize; //if (sx<0) {sx=0;}
@@ -110,11 +112,19 @@ void GameMap::renderMap(float rx, float ry, float angle, int rsize) {
     glEnable(GL_ALPHA_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    enumCells(sx, ex, sy, ey, &drawWaterproc);
+
+    //enumCells(sx, ex, sy, ey, &drawWaterproc);
+    renderWater();
+
+
     glDisable(GL_ALPHA_TEST);
     glDisable(GL_BLEND);
 
     glPopMatrix();
+}
+
+void GameMap::renderBlock(int mask) {
+    BoxRenderers[mask]->render(GL_QUADS, RENDER_MESH_NORMALS);
 }
 
 void GameMap::enumCells(int sx,int ex, int sy, int ey, void(*proc)(int, ICell*)) {
@@ -156,54 +166,27 @@ void GameMap::deleteCells() {
 }
 
 void GameMap::initBlocks() {
-
+    for (int i=0;i<=15;i++)
+        BoxRenderers[i] = new BoxRenderer(i, MAP_CELL_SIZE, MAP_BOX_HIGHT*2);
 }
 
 void GameMap::deleteBloks() {
+    for (int i=0;i<=15;i++)
+        delete BoxRenderers[i];
 }
 
 //
 void GameMap::initWater() {
-    waterSize = 8;
-    //n^2
-    waterWave = new float[waterSize*waterSize];
-    //n^2*3
-    waterVertex = new float[waterSize*waterSize*4];
-    //n^2*3
-    waterNormal = new float[waterSize*waterSize*3];
-    //(n-1)^2*2
-    waterIndex = new int[(waterSize-1)*(waterSize-1)*2];
-    for (int i=0; i<waterSize*waterSize; i++) {
-        //waterVertex[i*3+0] = rand()%10-5;
-        //waterVertex[i*3+1] = (rand()%10-5)/10.0f;
-        //waterVertex[i*3+2] = rand()%10-5;
-    }
-    for (int i=0;i<waterSize; i++) {
-        for (int j=0;j<waterSize; j++) {
-
-        }
-    }
-    for (int i=0; i<waterSize*waterSize; i++) {
-        waterIndex[i] = i;
-    }
+    waterSurface = new WaterSurfaceRenderer(8);
 }
 
 void GameMap::deleteWater() {
-
+    delete waterSurface;
 }
 
 void GameMap::renderWater() {
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_INDEX_ARRAY);
-
-    glVertexPointer(3, GL_FLOAT, 0, waterVertex);
-    glNormalPointer(GL_FLOAT, 0, waterNormal);
-    glIndexPointer(GL_INT, 0, waterIndex);
-    glColor3f(1, 0, 0);
-    glDrawArrays(GL_LINE_LOOP, 0, waterSize*waterSize);
-
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_INDEX_ARRAY);
+    glColor4f(0.2f, 0.6f, 0.8f, 0.6f);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    waterSurface->render();
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

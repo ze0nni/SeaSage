@@ -10,8 +10,10 @@ class GameCell: public ICell {
 
         CellType getCellType() {return cellType;};
         void setCellType(CellType __cellType) {cellType=__cellType;}
+        IMap* getMap() {return Map; }
     protected:
     private:
+        IMap *Map;
         CellType cellType;
 };
 

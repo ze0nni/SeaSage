@@ -3,12 +3,14 @@
 ModelMesh::ModelMesh()
 {
     transformMatrix.setIdentity();
+    doModify();
+    memset(buffersID, 0, sizeof(buffersID));
     //ctor
 }
 
 ModelMesh::~ModelMesh()
 {
-    //dtor
+    glDeleteBuffers(buffersCount, buffersID);
 }
 
 void ModelMesh::addVertex(float x, float y, float z){
@@ -55,6 +57,7 @@ void ModelMesh::rawAddVertex(float x, float y, float z){
     vertex.push_back(x);
     vertex.push_back(y);
     vertex.push_back(z);
+    doModify();
 }
 
 void ModelMesh::rawAddVertex(Vector3d v) {
@@ -65,6 +68,7 @@ void ModelMesh::rawAddNormal(float x, float y, float z){
     normals.push_back(x);
     normals.push_back(y);
     normals.push_back(z);
+    doModify();
 }
 
 void ModelMesh::rawAddNormal(Vector3d v) {
@@ -74,10 +78,26 @@ void ModelMesh::rawAddNormal(Vector3d v) {
 void ModelMesh::rawAddUV(float u, float v){
     uvCoords.push_back(u);
     uvCoords.push_back(v);
+    doModify();
 }
 
 void ModelMesh::rawAddUV(Vector3d v) {
     rawAddUV(v.x, v.y);
+}
+
+void ModelMesh::genNewBuffer() {
+    glDeleteBuffers(buffersCount, buffersID);
+    glGenBuffers(buffersCount, buffersID);
+    glBindBuffer(GL_ARRAY_BUFFER, buffersID[0]);
+    glBufferData(GL_ARRAY_BUFFER,
+                 vertex.size(),
+                 vertex.data(),
+                 GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, buffersID[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, buffersID[2]);
+
+    noModify();
 }
 
 void ModelMesh::render(int glMode, const int flags) {

@@ -5,10 +5,13 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <string.h>
 
 #include "../Math.h"
 
+#define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
+#include <GL/glext.h>
 
 #define RENDER_MESH_NORMALS 1
 #define RENDER_MESH_UV 2
@@ -46,6 +49,13 @@ class ModelMesh
         std::vector<GLfloat> vertex;
         std::vector<GLfloat> normals;
         std::vector<GLfloat> uvCoords;
+
+        #define buffersCount 3
+        GLuint buffersID[buffersCount];
+        bool isModify;
+        void doModify() {isModify=true;}
+        void noModify() {isModify=false;}
+        void genNewBuffer();
 };
 
 #endif // MODELMESH_H

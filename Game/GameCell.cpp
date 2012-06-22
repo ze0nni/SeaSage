@@ -3,6 +3,7 @@
 GameCell::GameCell(IMap *__map)
 {
     //ctor
+    Map = __map;
 }
 
 GameCell::~GameCell()

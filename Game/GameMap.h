@@ -10,6 +10,7 @@
 #include "GameCell.h"
 #include "Display/BoxRenderer.h"
 #include "Display/WaterRenderer.h"
+#include "Display/WaterSurfaceRenderer.h"
 #include "../Core/Models/ModelMesh.h"
 
 #define MAP_CELL_SIZE 0.5f
@@ -26,22 +27,23 @@ class GameMap: public IMap
         ICell* getCell(uint cx, uint cy);
         float getCellSize() {return MAP_CELL_SIZE;}
         //
+        void doAction(double t);
+
         void renderMap(float rx, float ry, float angle, int rsize);
+        void renderBlock(int mask);
     protected:
     private:
+        WaterSurfaceRenderer *waterSurface;
         void initWater();
         void deleteWater();
         void renderWater();
-        int waterSize;
-        float  *waterWave;
-        GLfloat *waterVertex;
-        GLfloat *waterNormal;
-        GLint *waterIndex;
 
         ICell ***cells;
         uint width;
         uint height;
         void deleteCells();
+
+        BoxRenderer* BoxRenderers[15];
         void initBlocks();
         void deleteBloks();
         void enumCells(int sx,int ex, int sy, int ey, void(*proc)(int, ICell*));

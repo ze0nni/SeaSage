@@ -17,6 +17,7 @@ GameDisplay::~GameDisplay()
 
 void GameDisplay::doAction(double t) {
     if (game) game->doAction(t);
+    map->doAction(t);
 }
 
 void GameDisplay::doRender(double t) {

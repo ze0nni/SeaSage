@@ -51,6 +51,8 @@ public:
     virtual uint getWidth()=0;
     virtual uint getHeight()=0;
     virtual ICell* getCell(uint cx, uint cy)=0;
+    virtual void renderBlock(int mask)=0;
+    virtual void doAction(double t)=0;
 private:
     IGame *game;
     virtual float getCellSize()=0;
@@ -74,6 +76,7 @@ class ICell {
 public:
     virtual CellType getCellType()=0;
     virtual void setCellType(CellType __cellType)=0;
+    virtual IMap* getMap()=0;
 };
 
 /**
